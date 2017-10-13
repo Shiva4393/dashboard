@@ -1,0 +1,13 @@
+@mixin viewHeight($height){
+    min-height: calc(100vh - #{$height});
+}
+
+.mat-sidenav-container{@include viewHeight(64px)}
+
+.spacer{
+    flex: 1 1 auto;
+}
+.mat-avatar{
+    border-radius: 50%;
+    height: inherit;
+}
