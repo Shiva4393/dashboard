@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
   change(param: string): void {
     switch (param) {
       case 'dashboard': {
-        this.title = 'dashboard';
+        this.title = 'Dashboard';
         this.icon = 'dashboard';
       }
         break;
