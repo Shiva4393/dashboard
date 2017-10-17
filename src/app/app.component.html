@@ -1,19 +1,39 @@
-<mat-toolbar color="primary">
-    <span>Dashboard</span>
+<div class="dashboard">
+  <mat-toolbar color="primary">
+    <div class="logo">
+      <span>POD</span>
+      <mat-icon (click)="sidenav.open()">keyboard_arrow_down</mat-icon>
+    </div>
+    <span>
+      <mat-icon>{{icon}}</mat-icon>
+      <span [innerHtml]="title"></span>
+    </span>
     <span class="spacer"></span>
     <span [innerHtml]="userDetails.name" *ngIf="!userDetails.profile_image_url"></span>
     <img class="mat-avatar" [src]="userDetails.profile_image_url" alt="user" *ngIf="userDetails.profile_image_url" [title]="userDetails.name">
     <button mat-icon-button [matMenuTriggerFor]="menu">
-        <mat-icon>keyboard_arrow_down</mat-icon>
+      <mat-icon>keyboard_arrow_down</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
       <button mat-menu-item (click)="logout()">Logout</button>
     </mat-menu>
-</mat-toolbar>
-<router-outlet></router-outlet>
-<!--<mat-sidenav-container>
-    <mat-sidenav #sidenav class="example-sidenav">
-        
+  </mat-toolbar>
+  <router-outlet></router-outlet>
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav>
+      <mat-list (click)="change('dashboard');sidenav.close()">
+        <mat-list-item [routerLink]="['/dashboard']" routerLinkActive="active">
+          <mat-icon mat-list-icon>dashboard</mat-icon>
+          <h4 mat-line>Dashboard</h4>
+        </mat-list-item>
+      </mat-list>
+      <mat-list (click)="change('user');sidenav.close()">
+        <mat-list-item [routerLink]="['/users', userDetails.id]" routerLinkActive="active">
+          <mat-icon mat-list-icon>people</mat-icon>
+          <h4 mat-line>Users</h4>
+        </mat-list-item>
+      </mat-list>
     </mat-sidenav>
     <router-outlet></router-outlet>
-</mat-sidenav-container>-->
+  </mat-sidenav-container>
+</div>

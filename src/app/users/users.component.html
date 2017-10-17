@@ -1,0 +1,12 @@
+<div fxLayout="row">
+  <mat-list fxFlex="25">
+    <mat-list-item *ngFor="let user of usersList" [routerLink]="['/:user.id']">
+      <mat-icon mat-list-icon>
+        <img class="mat-avatar" [src]="user.image ? user.image : 'public/dashboard/assets/images/avatar.png'" [alt]="user.name" />
+      </mat-icon>
+      <h4 mat-line>{{user.name}}</h4>
+      <p mat-line> {{user.email}} </p>
+    </mat-list-item>
+  </mat-list>
+  <router-outlet></router-outlet>
+</div>

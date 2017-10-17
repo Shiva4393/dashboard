@@ -2,7 +2,19 @@
     min-height: calc(100vh - #{$height});
 }
 
-.mat-sidenav-container{@include viewHeight(64px)}
+.dashboard{
+    .mat-sidenav-container{@include viewHeight(64px)}
+    .mat-toolbar{
+        .logo{border-right: 2px solid #ccc;margin-right: 15px;
+            .mat-icon{cursor: pointer;position: relative;top: 6px;}
+        }
+    }
+    .mat-list{
+        .mat-list-item{outline: none;cursor: pointer;
+            &.active{background: #ccc;}
+        }
+    }
+}
 
 .spacer{
     flex: 1 1 auto;
