@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, NavigationStart } from '@angular/router';
 
 declare var App: any;
 
@@ -12,6 +13,15 @@ export class AppComponent implements OnInit {
   title: string = 'Dashboard';
   icon: string = 'dashboard';
   userDetails: Object;
+
+  constructor(private route: Router){
+    route.events.subscribe(val => {
+      if(val instanceof NavigationStart){
+        if(val.url.match('user'))
+          this.change('user');
+      }
+    })
+  }
 
   ngOnInit() {
     this.userDetails = App.user_details;

@@ -9,7 +9,9 @@ import {
   MatIconRegistry,
   MatIconModule,
   MatSidenavModule,
-  MatListModule
+  MatListModule,
+  MatInputModule,
+  MatProgressSpinnerModule
 } from '@angular/material';
 
 @NgModule({
@@ -20,7 +22,9 @@ import {
     MatButtonModule,
     MatIconModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatInputModule,
+    MatProgressSpinnerModule
   ],
   exports: [
     FlexLayoutModule,
@@ -29,7 +33,9 @@ import {
     MatButtonModule,
     MatIconModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatInputModule,
+    MatProgressSpinnerModule
   ]
 })
 export class CustomMaterialModule {

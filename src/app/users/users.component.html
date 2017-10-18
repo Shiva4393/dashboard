@@ -1,12 +1,29 @@
-<div fxLayout="row">
-  <mat-list fxFlex="25">
-    <mat-list-item *ngFor="let user of usersList" [routerLink]="['/:user.id']">
-      <mat-icon mat-list-icon>
-        <img class="mat-avatar" [src]="user.image ? user.image : 'public/dashboard/assets/images/avatar.png'" [alt]="user.name" />
-      </mat-icon>
-      <h4 mat-line>{{user.name}}</h4>
-      <p mat-line> {{user.email}} </p>
-    </mat-list-item>
-  </mat-list>
+<div fxLayout="row" class="users">
+  <div fxFlex="25" class="side-nav">
+    <mat-toolbar class="search">
+      <span>USERS</span>
+      <span fxFlex></span>
+      <mat-form-field class="example-full-width" floatPlaceholder="never">
+        <input matInput placeholder="Search User" #search (keyup)="searchUser(search.value, $event)">
+        <mat-icon matPrefix>search</mat-icon>
+        <mat-icon matSuffix *ngIf="searching" class="spinner"><mat-spinner class="small-spinner"></mat-spinner></mat-icon>
+        <mat-icon matSuffix *ngIf="!searching && search.value > 2" (click)="search.value = '';searchUser(search.value)">close</mat-icon>
+      </mat-form-field>
+      <mat-icon>add</mat-icon>
+    </mat-toolbar>
+    <div class="list">
+      <mat-list>
+        <mat-list-item *ngFor="let user of usersList" [routerLink]="['/users', user.id]" routerLinkActive="active">
+          <mat-icon mat-list-icon>
+            <img class="mat-avatar" [src]="user.image ? user.image : 'public/dashboard/assets/images/avatar.png'" [alt]="user.name" />
+          </mat-icon>
+          <h4 mat-line>{{user.name}}</h4>
+          <p mat-line> {{user.email}} </p>
+        </mat-list-item>
+        <mat-list-item *ngIf="noUsers && !fetchingData">No User Found</mat-list-item>
+      </mat-list>
+      <mat-spinner class="medium-spinner" *ngIf="fetchingData"></mat-spinner>
+    </div>
+  </div>
   <router-outlet></router-outlet>
 </div>
