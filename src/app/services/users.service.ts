@@ -11,14 +11,14 @@ export class UsersService {
 
   private getUsersApi = App.base_url + 'getUsersDropdown';
   private getSelectedUserApi = App.base_url + 'userDetails';
-  private getPermissionsApi = App.base_url + 'getPermissions';
-  private getGlobalApi = App.base_url + 'getGlobalData';
+  private getUserPermissionsApi = App.base_url + 'getPermissions';
+  private getGlobalPermissionsApi = App.base_url + 'getGlobalData';
 
   constructor(private http: HttpClient) { }
 
   getUsersList(param: Param): Promise<any> {
     return this.http
-      .get(this.getUsersApi)
+      .post(this.getUsersApi, param)
       .toPromise()
       .then(response => response)
       .catch(this.handleError);
@@ -34,7 +34,7 @@ export class UsersService {
 
   getPermissions(param: any): Promise<any> {
     return this.http
-      .post(this.getPermissionsApi, param)
+      .post(this.getUserPermissionsApi, param)
       .toPromise()
       .then(response => response)
       .catch(this.handleError);
@@ -42,7 +42,7 @@ export class UsersService {
 
   getGlobalPermissions(): Promise<any> {
     return this.http
-      .get(this.getGlobalApi)
+      .get(this.getGlobalPermissionsApi)
       .toPromise()
       .then(response => response)
       .catch(this.handleError);

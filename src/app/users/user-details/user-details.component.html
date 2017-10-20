@@ -1,3 +1,63 @@
-<form [formGroup]="userForm" (ngSubmit)="resetPassword(resetForm)">
-  
-</form>
+<div class="user-details">
+  <mat-toolbar class="mat-small-toolbar">
+    <span *ngIf="selectedUser">
+      <b [innerHtml]="selectedUser.email"></b>&nbsp;&nbsp;{{selectedUser.firstname}}</span>
+  </mat-toolbar>
+  <form [formGroup]="userForm" (ngSubmit)="submitUser(userForm)">
+    <div class="details" [class.user-footer]="userForm.dirty">
+      <div fxLayout="row" fxLayoutAlign="center center" class="card">
+        <mat-card fxFlex="85">
+          <mat-card-content>
+            <h2>User Profile</h2>
+            <div fxLayout="row">
+              <div fxFlex="60">
+                <mat-form-field>
+                  <input matInput placeholder="First Name" formControlName="firstname">
+                  <mat-error *ngIf="userForm.controls.firstname.hasError('required')">Please Enter First Name</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="Last Name" formControlName="lastname">
+                  <mat-error *ngIf="userForm.controls.lastname.hasError('required')">Please Enter Last Name</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="Email Address" formControlName="email">
+                  <mat-error *ngIf="userForm.controls.email.hasError('pattern')">Please Enter Valid Email Address</mat-error>
+                  <mat-error *ngIf="userForm.controls.email.hasError('required')">Please Enter Email Address</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-select placeholder="Status" formControlName="status">
+                    <mat-option [value]="stat.param" *ngFor="let stat of status" [innerHtml]="stat.value"></mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="userForm.controls.status.hasError('required')">Please Select Status</mat-error>
+                </mat-form-field>
+              </div>
+              <div fxFlex="30">
+                <!-- <ng4-files-click (filesSelect)="filesSelect($event)">
+                            <span>Click me to upload</span>
+                          </ng4-files-click> -->
+              </div>
+            </div>
+            <div fxLayout="column">
+              <h2>Permissions</h2>
+              <mat-card class="permissions">
+                <mat-card-content>
+                  <div class="parent-permission" *ngFor="let parent of globalPermissions">
+                    <mat-checkbox (change)="toogleCheckbox(parent)">{{parent.name}}</mat-checkbox>
+                    <div class="child-permission" *ngFor="let child of parent.children; let i = index" [class.first]="i == 0">
+                      <mat-checkbox (change)="toogleCheckbox(child)">{{child.name}}</mat-checkbox>
+                    </div>
+                  </div>
+                  <!-- <span *ngIf="userForm.controls.permissions.invalid">Please Check Required Permissions To Get Access</span> -->
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <div class="footer" fxLayout="row" fxLayoutAlign="end center" *ngIf="userForm.dirty">
+      <button type="button" mat-button (click)="userForm.reset()">Cancel</button>
+      <button type="submit" mat-raised-button color="primary" [disabled]="userForm.invalid">Save</button>
+    </div>
+  </form>
+</div>

@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms'
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
+import { Ng4FilesModule } from 'angular4-files-upload';
+
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CustomMaterialModule } from './custom-material/custom-material.module';
 
@@ -27,6 +29,7 @@ import { DashboardRoutingModule } from './dashboard-routing/dashboard-routing.mo
     BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
+    Ng4FilesModule,
     BrowserAnimationsModule,
     CustomMaterialModule,
     DashboardRoutingModule

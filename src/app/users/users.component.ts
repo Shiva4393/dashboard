@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Param } from '../custom-format/param';
 
@@ -12,7 +13,7 @@ import { UsersService } from '../services/users.service';
 })
 export class UsersComponent implements OnInit {
 
-  usersList: Array<object>;
+  usersList: Array<any>;
   params: Param = {
     page: 1,
     perPage: 25,
@@ -23,7 +24,9 @@ export class UsersComponent implements OnInit {
   searching: boolean;
   noUsers: boolean;
 
-  constructor(private userService: UsersService) { }
+  constructor(
+    private router: Router,
+    private userService: UsersService) { }
 
   ngOnInit() {
     this.getUsers(this.params);
@@ -38,13 +41,26 @@ export class UsersComponent implements OnInit {
       this.searching = false;
       if(response.result.success){
         if(cb) this.usersList = [];
-        this.usersList = response.result.data.items;
+        if(response.result.data.count == 0) this.noUsersExists();
+        else{
+          this.usersList = response.result.data.items;
+          this.selectUser();
+        }
       }
       else{
-        this.noUsers = true;
-        this.usersList = [];
+        this.noUsersExists();
       }
     })
+  }
+
+  noUsersExists(): void{
+    this.noUsers = true;
+    this.usersList = [];
+    this.router.navigateByUrl('/users/0');
+  }
+
+  selectUser(): void{
+    this.router.navigateByUrl('/users/'+this.usersList[0].id);
   }
 
   searchUser(val: string, event?: any): void{

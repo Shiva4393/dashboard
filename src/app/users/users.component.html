@@ -1,15 +1,19 @@
 <div fxLayout="row" class="users">
   <div fxFlex="25" class="side-nav">
-    <mat-toolbar class="search">
+    <mat-toolbar class="search mat-small-toolbar">
       <span>USERS</span>
       <span fxFlex></span>
-      <mat-form-field class="example-full-width" floatPlaceholder="never">
+      <mat-form-field floatPlaceholder="never">
         <input matInput placeholder="Search User" #search (keyup)="searchUser(search.value, $event)">
         <mat-icon matPrefix>search</mat-icon>
-        <mat-icon matSuffix *ngIf="searching" class="spinner"><mat-spinner class="small-spinner"></mat-spinner></mat-icon>
-        <mat-icon matSuffix *ngIf="!searching && search.value > 2" (click)="search.value = '';searchUser(search.value)">close</mat-icon>
+        <mat-icon matSuffix *ngIf="searching" class="spinner">
+          <mat-spinner class="small-spinner"></mat-spinner>
+        </mat-icon>
+        <mat-icon matSuffix *ngIf="!searching && search.value.length > 2" (click)="search.value = '';searchUser(search.value)">close</mat-icon>
       </mat-form-field>
-      <mat-icon>add</mat-icon>
+      <button mat-mini-fab color="primary">
+        <mat-icon aria-label="add user">add</mat-icon>
+      </button>
     </mat-toolbar>
     <div class="list">
       <mat-list>
@@ -25,5 +29,7 @@
       <mat-spinner class="medium-spinner" *ngIf="fetchingData"></mat-spinner>
     </div>
   </div>
-  <router-outlet></router-outlet>
+  <div fxFlex="85">
+    <router-outlet></router-outlet>
+  </div>
 </div>
