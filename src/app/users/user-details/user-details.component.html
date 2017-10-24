@@ -3,8 +3,9 @@
     <span *ngIf="selectedUser">
       <b [innerHtml]="selectedUser.email"></b>&nbsp;&nbsp;{{selectedUser.firstname}}</span>
   </mat-toolbar>
+  <mat-spinner *ngIf="fetchingData" class="medium-spinner"></mat-spinner>
   <form [formGroup]="userForm" (ngSubmit)="submitUser(userForm)">
-    <div class="details" [class.user-footer]="userForm.dirty">
+    <div class="details" [class.user-footer]="userForm.dirty" *ngIf="!fetchingData">
       <div fxLayout="row" fxLayoutAlign="center center" class="card">
         <mat-card fxFlex="85">
           <mat-card-content>
@@ -41,13 +42,7 @@
               <h2>Permissions</h2>
               <mat-card class="permissions">
                 <mat-card-content>
-                  <div class="parent-permission" *ngFor="let parent of globalPermissions">
-                    <mat-checkbox (change)="toogleCheckbox(parent)">{{parent.name}}</mat-checkbox>
-                    <div class="child-permission" *ngFor="let child of parent.children; let i = index" [class.first]="i == 0">
-                      <mat-checkbox (change)="toogleCheckbox(child)">{{child.name}}</mat-checkbox>
-                    </div>
-                  </div>
-                  <!-- <span *ngIf="userForm.controls.permissions.invalid">Please Check Required Permissions To Get Access</span> -->
+                  <app-user-permissions *ngFor="let parent of globalPermissions; let i = index" [permission]="parent"></app-user-permissions>
                 </mat-card-content>
               </mat-card>
             </div>
@@ -56,7 +51,7 @@
       </div>
     </div>
     <div class="footer" fxLayout="row" fxLayoutAlign="end center" *ngIf="userForm.dirty">
-      <button type="button" mat-button (click)="userForm.reset()">Cancel</button>
+      <button type="button" mat-button (click)="cancel(userForm)">Cancel</button>
       <button type="submit" mat-raised-button color="primary" [disabled]="userForm.invalid">Save</button>
     </div>
   </form>

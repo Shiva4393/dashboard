@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule }   from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms'
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -15,6 +16,7 @@ import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { UsersComponent } from './users/users.component';
 import { UserDetailsComponent } from './users/user-details/user-details.component';
+import { UserPermissionsComponent } from './users/user-permissions/user-permissions.component';
 
 import { DashboardRoutingModule } from './dashboard-routing/dashboard-routing.module';
 
@@ -23,10 +25,12 @@ import { DashboardRoutingModule } from './dashboard-routing/dashboard-routing.mo
     AppComponent,
     DashboardComponent,
     UsersComponent,
-    UserDetailsComponent
+    UserDetailsComponent,
+    UserPermissionsComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     Ng4FilesModule,

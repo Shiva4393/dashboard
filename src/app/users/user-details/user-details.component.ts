@@ -1,128 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EmailValidator } from '@angular/forms';
+
+import * as _ from "lodash";
 
 import { Ng4FilesStatus, Ng4FilesSelected } from 'angular4-files-upload';
 
 import { UsersService } from '../../services/users.service';
 
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
-const permissions = {
-  "result": {
-    "success": true,
-    "data": {
-      "global_divisions": "",
-      "global_system_permissions": [
-        {
-          "id": 25,
-          "name": "Admin Access",
-          "code": "admin_access",
-          "parent_id": 0,
-          "type": "label",
-          "level": 1,
-          "options": [
-            {
-              "id": 1,
-              "name": ""
-            }
-          ],
-          "children": [
-            {
-              "id": 36,
-              "name": "Superadmin",
-              "code": "super_admin",
-              "parent_id": 25,
-              "type": "check",
-              "level": 2,
-              "options": [
-                {
-                  "id": 1,
-                  "name": ""
-                }
-              ]
-            },
-            {
-              "id": 55,
-              "name": "Login As User",
-              "code": "login_as_user",
-              "parent_id": 25,
-              "type": "check",
-              "level": 2,
-              "options": [
-                {
-                  "id": 1,
-                  "name": ""
-                }
-              ]
-            },
-            {
-              "id": 56,
-              "name": "Email Notification",
-              "code": "email_notification",
-              "parent_id": 25,
-              "type": "check",
-              "level": 2,
-              "options": [
-                {
-                  "id": 1,
-                  "name": ""
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": 53,
-          "name": "Admin Group Access",
-          "code": "admin_group_access",
-          "parent_id": 0,
-          "type": "check",
-          "level": 2,
-          "options": [
-            {
-              "id": 1,
-              "name": ""
-            }
-          ],
-          "children": [
-            {
-              "id": 44,
-              "name": "Divisions Settings",
-              "code": "master_table_15",
-              "parent_id": 53,
-              "type": "check",
-              "level": 3,
-              "options": [
-                {
-                  "id": 1,
-                  "name": ""
-                }
-              ]
-            },
-            {
-              "id": 57,
-              "name": "File Categories",
-              "code": "master_table_16",
-              "parent_id": 53,
-              "type": "check",
-              "level": 3,
-              "options": [
-                {
-                  "id": 1,
-                  "name": ""
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    "message": "You have accessed successfully",
-    "status_code": 200
-  }
-}
 
 @Component({
   selector: 'app-user-details',
@@ -139,6 +26,8 @@ export class UserDetailsComponent implements OnInit {
   ];
   fetchingData: boolean = true;
   globalPermissions: any;
+  userPermissions: Array<any> = [];
+  systemPermissions: Array<any> = [];
   selectedUser: any;
 
   constructor(
@@ -149,16 +38,25 @@ export class UserDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.createForm();
-    //this.getGlobalPermissions();
-    this.globalPermissions = permissions.result.data.global_system_permissions;
+    this.getGlobalPermissions();
     this.activeRoute.params.subscribe((params: Params) => {
       this.userService
         .getSelectedUser(params)
         .then(response => {
           this.fetchingData = false;
-          if(response.result.success){
+          if (response.result.success) {
             this.selectedUser = response.result.data;
             this.setForm(this.selectedUser);
+          }
+        })
+        .catch(error => console.log(error));
+
+      this.userService
+        .getPermissions({ users_id: params.id })
+        .then(response => {
+          if (response.result.success) {
+            this.userPermissions = response.result.data.system_permissions;
+            this.loadInitials(this.globalPermissions);
           }
         })
         .catch(error => console.log(error));
@@ -174,26 +72,6 @@ export class UserDetailsComponent implements OnInit {
     })
   }
 
-  getGlobalPermissions() {
-    this.userService
-      .getGlobalPermissions()
-      .then(response => {
-        let permissionFormGroup: FormGroup = new FormGroup({});
-        for(let parent of this.globalPermissions){
-          let control: FormControl = new FormControl(parent.id, Validators.required);
-          permissionFormGroup.addControl(parent.id, control);
-          if(parent.children){
-            for(var child of parent.children){
-              let control: FormControl = new FormControl(child.id, Validators.required);
-              permissionFormGroup.addControl(child.id, control);
-            }
-          }
-        }
-        console.log(response)
-      })
-      .catch(error => console.log(error));
-  }
-
   setForm(data: any): void {
     this.userForm.setValue({
       firstname: data.firstname,
@@ -203,13 +81,63 @@ export class UserDetailsComponent implements OnInit {
     })
   }
 
+  getGlobalPermissions() {
+    this.userService
+      .getGlobalPermissions()
+      .then(response => {
+        if (response.result.success) {
+          this.globalPermissions = response.result.data.global_system_permissions;
+        }
+      })
+      .catch(error => console.log(error));
+  }
+
+  loadPermissions(data: any): void {
+    data.map(value => {
+      if (_.findIndex(this.systemPermissions, { id: value.id }) === -1 && value.permission) {
+        if (value.permission.length) {
+          this.systemPermissions.push({ id: value.id, permission: value.permission });
+        }
+      }
+      if (value.children) {
+        this.loadPermissions(value.children);
+      }
+    });
+  }
+
+  loadInitials(data: any): void {
+    data.map(child => {
+      child.permission = [];
+      child.checked = false;
+      this.userPermissions.map(getpermission => {
+        if (getpermission.id === child.id) {
+          child.checked = _.indexOf(getpermission.permission, 1) > -1 ? true : false;
+          child.selectedValue = getpermission.permission[0];
+          child.permission = getpermission.permission;
+        }
+        if (child.children) {
+          this.loadInitials(child.children);
+        }
+      });
+    })
+  }
+
   filesSelect(selectedFiles: Ng4FilesSelected): void {
     console.log(selectedFiles)
+  }
+
+  cancel(form: any): void {
+    form.markAsPristine();
+    this.setForm(this.selectedUser);
+    this.loadInitials(this.globalPermissions);
   }
 
   submitUser(form: any): void {
     if (!form.valid) return;
     console.log(form.value)
+    this.systemPermissions = [];
+    this.loadPermissions(this.globalPermissions);
+    console.log(this.systemPermissions);
   }
 
 }

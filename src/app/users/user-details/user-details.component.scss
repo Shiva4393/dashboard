@@ -2,6 +2,10 @@
 	height: calc(100vh - #{$height});
 }
 
+.user-details{height: 100%;
+    .mat-spinner.medium-spinner{left: 50%;top: 35%}
+}
+
 .mat-card{
     .mat-card-header{
         .mat-card-title{}
