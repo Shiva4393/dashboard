@@ -29,7 +29,7 @@
     </div>
   </div>
   <div *ngIf="permission.children" class="permission-block">
-    <div *ngIf="!((permission.type == 'check' && !permission.checked) || ((permission.type == 'select' || permission.type == 'radio') && permission.selectedValue != 1))">
+    <div [hidden]="(permission.type == 'check' && !permission.checked) || ((permission.type == 'select' || permission.type == 'radio') && permission.selectedValue != 1)">
       <app-user-permissions *ngFor="let child of permission.children; let i = index" [permission]="child" [class.child-permission-border]="permission.level > 2"
         class="child-permission"></app-user-permissions>
     </div>

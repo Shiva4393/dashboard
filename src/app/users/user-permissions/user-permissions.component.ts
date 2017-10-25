@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import * as _ from "lodash";
 
+import { UserDetailsComponent } from '../user-details/user-details.component';
+
 @Component({
   selector: 'app-user-permissions',
   templateUrl: './user-permissions.component.html',
@@ -11,13 +13,20 @@ export class UserPermissionsComponent implements OnInit {
 
   @Input() permission;
 
+  constructor(private parent: UserDetailsComponent) {}
+
   ngOnInit() {
   }
 
+  setDirty(): void{
+    this.parent.setDirty();
+  }
+
   check(item, option): void {
+    this.setDirty();
     if (item.type === 'check') {
       item.permission = _.indexOf(item.permission, 1) > -1 ? [] : [1]
-      item.check = _.indexOf(item.permission, 1) > -1 ? true : false;
+      item.checked = _.indexOf(item.permission, 1) > -1 ? true : false;
     }
     else if (item.type === 'select' || item.type === 'radio') {
       item.permission = [option];

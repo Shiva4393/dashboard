@@ -40,6 +40,8 @@ export class UserDetailsComponent implements OnInit {
     this.createForm();
     this.getGlobalPermissions();
     this.activeRoute.params.subscribe((params: Params) => {
+      this.userForm.markAsPristine(); // default form prisnstine
+      this.fetchingData = true;
       this.userService
         .getSelectedUser(params)
         .then(response => {
@@ -107,23 +109,28 @@ export class UserDetailsComponent implements OnInit {
 
   loadInitials(data: any): void {
     data.map(child => {
-      child.permission = [];
-      child.checked = false;
+      delete child.permission;
+      delete child.checked;
+      delete child.selectedValue;
       this.userPermissions.map(getpermission => {
         if (getpermission.id === child.id) {
           child.checked = _.indexOf(getpermission.permission, 1) > -1 ? true : false;
           child.selectedValue = getpermission.permission[0];
           child.permission = getpermission.permission;
         }
-        if (child.children) {
-          this.loadInitials(child.children);
-        }
       });
+      if (child.children) {
+        this.loadInitials(child.children);
+      }
     })
   }
 
   filesSelect(selectedFiles: Ng4FilesSelected): void {
     console.log(selectedFiles)
+  }
+
+  setDirty(): void{
+    this.userForm.markAsDirty();
   }
 
   cancel(form: any): void {

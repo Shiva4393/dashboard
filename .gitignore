@@ -2,6 +2,7 @@
 
 # compiled output
 /dist
+/dashboard
 /tmp
 /out-tsc
 
