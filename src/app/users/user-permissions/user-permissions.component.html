@@ -22,7 +22,7 @@
         </mat-radio-group>
         <div *ngIf="permission.type === 'check'" [style.paddingTop.px]="permission.level * 5">
           <div *ngFor="let option of permission.options">
-            <mat-checkbox [checked]="permission.checked" (click)="check(permission, option.id)" class="example-margin">{{option.name}}</mat-checkbox>
+            <mat-checkbox [checked]="permission.checked" (change)="check(permission, option.id)" class="example-margin">{{option.name}}</mat-checkbox>
           </div>
         </div>
       </div>
