@@ -42,6 +42,11 @@ export class UserDetailsComponent implements OnInit {
     this.activeRoute.params.subscribe((params: Params) => {
       this.userForm.markAsPristine(); // default form prisnstine
       this.fetchingData = true;
+      if(params.id == 0){
+        this.fetchingData = false;
+        this.newUser();
+        return;
+      }
       this.userService
         .getSelectedUser(params)
         .then(response => {
@@ -63,6 +68,13 @@ export class UserDetailsComponent implements OnInit {
         })
         .catch(error => console.log(error));
     });
+  }
+
+  newUser(): void{
+    this.userForm.reset();
+    this.selectedUser = {};
+    this.userPermissions = [];
+    this.loadInitials(this.globalPermissions);
   }
 
   createForm(): void {

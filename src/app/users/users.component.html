@@ -11,7 +11,7 @@
         </mat-icon>
         <mat-icon matSuffix *ngIf="!searching && search.value.length > 2" (click)="search.value = '';searchUser(search.value)">close</mat-icon>
       </mat-form-field>
-      <button mat-mini-fab color="primary">
+      <button mat-mini-fab color="primary" [routerLink]="['/users', 0]">
         <mat-icon aria-label="add user">add</mat-icon>
       </button>
     </mat-toolbar>
